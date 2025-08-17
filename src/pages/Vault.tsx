@@ -125,11 +125,11 @@ const SortableEntry: React.FC<SortableEntryProps> = ({
                 </div>
               </div>
               
-              <div className={`flex items-center gap-1 ${isMobile ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`}>
+              <div className="flex items-center transition-opacity">
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8"
+                  className="h-7 w-7"
                   onClick={(e) => {
                     e.stopPropagation();
                     onTogglePassword(entry.id);
@@ -144,7 +144,7 @@ const SortableEntry: React.FC<SortableEntryProps> = ({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8"
+                  className="h-7 w-7"
                   onClick={(e) => {
                     e.stopPropagation();
                     onEdit(entry);
@@ -155,7 +155,7 @@ const SortableEntry: React.FC<SortableEntryProps> = ({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 text-destructive hover:text-destructive-foreground hover:bg-destructive"
+                  className="h-7 w-7 text-destructive hover:text-destructive-foreground hover:bg-destructive"
                   onClick={(e) => {
                     e.stopPropagation();
                     setConfirmDeleteOpen(true);
@@ -331,7 +331,7 @@ const SortableFolder: React.FC<{
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex items-center space-x-2 px-4 py-2 bg-vault-folder rounded-lg border transition-all duration-200 cursor-pointer ${
+      className={`flex items-center justify-center space-x-2 px-3 py-2 bg-vault-folder rounded-lg border transition-all duration-200 cursor-pointer ${
         isDragging ? 'opacity-70' : 'hover:shadow-sm'
       } ${
         isSelected 
@@ -765,11 +765,11 @@ const Vault: React.FC = () => {
           onDragEnd={handleDragEnd}
         >
           {/* Folders Row */}
-          <div className="mb-6 vault-slide-up">
+          <div className="mb-8 vault-slide-up">
             <div className="flex items-center gap-3 mb-4 overflow-x-auto pb-1 scrollbar-thin">
               {/* All Folder Button */}
               <div
-                className={`flex items-center space-x-2 px-4 py-2 bg-vault-folder rounded-lg border transition-all duration-200 cursor-pointer ${
+                className={`flex items-center justify-center space-x-2 px-3 py-2 bg-vault-folder rounded-lg border transition-all duration-200 cursor-pointer ${
                   selectedFolder === null 
                     ? 'border-vault-outline-active bg-vault-item-hover' 
                     : 'border-border hover:border-vault-outline-hover hover:shadow-sm'
