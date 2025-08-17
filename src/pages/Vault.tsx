@@ -330,7 +330,7 @@ const SortableFolder: React.FC<{
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex items-center justify-center space-x-2 px-3 py-2 bg-vault-folder rounded-lg border transition-all duration-200 cursor-pointer ${
+      className={`flex items-center justify-center space-x-2 px-3 py-2 bg-vault-folder rounded-lg border transition-all duration-200 ease-out cursor-pointer ${
         isDragging ? 'border-white' : 'hover:shadow-sm'
       } ${
         isSelected 
@@ -612,18 +612,20 @@ const Vault: React.FC = () => {
 
   const handleConfirmDeleteFolder = async () => {
     if (folderToDelete) {
-      const success = await deleteFolder(folderToDelete);
+      // Reset folder selection and close dialog immediately to prevent freezing
       if (selectedFolder === folderToDelete) {
         setSelectedFolder(null);
       }
+      setDeleteDialogOpen(false);
+      const tempFolderToDelete = folderToDelete;
+      setFolderToDelete(null);
+      
+      const success = await deleteFolder(tempFolderToDelete);
       toast({
         title: success ? "Folder Deleted" : "Error",
         description: success ? "Folder deleted successfully" : "Failed to delete folder",
         variant: success ? "default" : "destructive",
       });
-      
-      setDeleteDialogOpen(false);
-      setFolderToDelete(null);
     }
   };
 
@@ -720,38 +722,14 @@ const Vault: React.FC = () => {
 
         {/* Search */}
         <div className="mb-6 vault-slide-up">
-          <div className="flex items-center gap-2">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input
-                placeholder="Search entries..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-input border-vault-outline focus:border-vault-outline-active"
-              />
-            </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="px-3"
-                >
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-popover border-border" align="end">
-                <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">
-                  Enable Drag Mode
-                </DropdownMenuItem>
-                <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">
-                  Select Multiple
-                </DropdownMenuItem>
-                <DropdownMenuItem className="text-destructive hover:bg-destructive hover:text-destructive-foreground cursor-pointer">
-                  Bulk Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Search entries..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 bg-input border-vault-outline focus:border-vault-outline-active"
+            />
           </div>
         </div>
 
@@ -783,7 +761,7 @@ const Vault: React.FC = () => {
               <div className="flex items-center space-x-3">
                 <SortableContext items={sortedFolders.map(f => f.id)} strategy={horizontalListSortingStrategy}>
                   {sortedFolders.map((folder) => (
-                    <div key={folder.id} className="group">
+                    <div key={folder.id} className="group transition-all duration-200 ease-out">
                       <SortableFolder
                         folder={folder}
                         isSelected={selectedFolder === folder.id}
@@ -876,15 +854,16 @@ const Vault: React.FC = () => {
               >
                 <div className="space-y-3">
                   {filteredEntries.map((entry) => (
-                    <SortableEntry
-                      key={entry.id}
-                      entry={entry}
-                      onCopy={handleCopy}
-                      onEdit={handleEditEntry}
-                      onDelete={handleDeleteEntry}
-                      onTogglePassword={handleTogglePassword}
-                      showPassword={visiblePasswords.has(entry.id)}
-                    />
+                    <div key={entry.id} className="transition-all duration-200 ease-out">
+                      <SortableEntry
+                        entry={entry}
+                        onCopy={handleCopy}
+                        onEdit={handleEditEntry}
+                        onDelete={handleDeleteEntry}
+                        onTogglePassword={handleTogglePassword}
+                        showPassword={visiblePasswords.has(entry.id)}
+                      />
+                    </div>
                   ))}
                 </div>
               </SortableContext>
