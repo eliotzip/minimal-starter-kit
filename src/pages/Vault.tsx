@@ -712,30 +712,6 @@ const Vault: React.FC = () => {
           </div>
         </div>
 
-        {/* Folder Action Buttons - appear when a folder is selected */}
-        {selectedFolder && (
-          <div className="flex items-center justify-center gap-1 mb-4 animate-fade-in">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => {
-                const folder = sortedFolders.find(f => f.id === selectedFolder);
-                if (folder) openRenameDialog(folder);
-              }}
-              className="h-6 w-6 text-muted-foreground hover:text-foreground hover:bg-muted"
-            >
-              <Edit3 className="h-3 w-3" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => openDeleteDialog(selectedFolder)}
-              className="h-6 w-6 text-muted-foreground hover:text-destructive hover:bg-muted"
-            >
-              <Trash2 className="h-3 w-3" />
-            </Button>
-          </div>
-        )}
 
         {/* Single DndContext for both folders and entries */}
         <DndContext
@@ -747,7 +723,7 @@ const Vault: React.FC = () => {
         >
           {/* Folders Row */}
           <div className="mb-8 vault-slide-up">
-            <div className="flex items-center gap-3 mb-4 overflow-x-auto pb-1 scrollbar-thin">
+            <div className="relative flex items-center gap-3 mb-4 overflow-x-auto pb-1 scrollbar-thin">
               {/* All Folder Button */}
               <div
                 className={`flex items-center justify-center space-x-2 px-3 py-2 bg-vault-folder rounded-lg border transition-all duration-200 cursor-pointer ${
@@ -824,6 +800,31 @@ const Vault: React.FC = () => {
                   </Button>
                 )}
               </div>
+
+              {/* Folder Action Buttons - fixed position on the right */}
+              {selectedFolder && (
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 flex flex-col gap-1 bg-background/80 backdrop-blur-sm rounded-md p-1 animate-fade-in">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => {
+                      const folder = sortedFolders.find(f => f.id === selectedFolder);
+                      if (folder) openRenameDialog(folder);
+                    }}
+                    className="h-6 w-6 text-muted-foreground hover:text-foreground hover:bg-muted"
+                  >
+                    <Edit3 className="h-3 w-3" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => openDeleteDialog(selectedFolder)}
+                    className="h-6 w-6 text-muted-foreground hover:text-destructive hover:bg-muted"
+                  >
+                    <Trash2 className="h-3 w-3" />
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
 
