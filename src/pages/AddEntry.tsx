@@ -191,7 +191,7 @@ const AddEntry: React.FC = () => {
                   placeholder="e.g., Gmail, Bank Account"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="bg-input border-vault-outline focus:border-vault-outline-active"
+                  className="bg-input border-vault-outline"
                   required
                 />
               </div>
@@ -203,7 +203,7 @@ const AddEntry: React.FC = () => {
                   placeholder="Enter username or email"
                   value={formData.username}
                   onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                  className="bg-input border-vault-outline focus:border-vault-outline-active"
+                  className="bg-input border-vault-outline"
                 />
               </div>
 
@@ -216,7 +216,7 @@ const AddEntry: React.FC = () => {
                     placeholder="Enter password"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="pr-20 bg-input border-vault-outline focus:border-vault-outline-active"
+                    className="pr-20 bg-input border-vault-outline"
                   />
                   <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1">
                     <Button
@@ -254,7 +254,7 @@ const AddEntry: React.FC = () => {
                   placeholder="https://example.com"
                   value={formData.website}
                   onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                  className="bg-input border-vault-outline focus:border-vault-outline-active"
+                  className="bg-input border-vault-outline"
                 />
               </div>
 
@@ -265,7 +265,7 @@ const AddEntry: React.FC = () => {
                     value={formData.folderId || 'no-folder'}
                     onValueChange={(value) => setFormData({ ...formData, folderId: value === 'no-folder' ? '' : value })}
                   >
-                    <SelectTrigger className="bg-input border-vault-outline focus:border-vault-outline-active">
+                    <SelectTrigger className="bg-input border-vault-outline">
                       <SelectValue placeholder="Select a folder (optional)" />
                     </SelectTrigger>
                     <SelectContent>

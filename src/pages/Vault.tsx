@@ -707,7 +707,7 @@ const Vault: React.FC = () => {
               placeholder="Search entries..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 bg-input border-vault-outline focus:border-vault-outline-active"
+              className="pl-10 bg-input border-vault-outline"
             />
           </div>
         </div>
@@ -766,7 +766,7 @@ const Vault: React.FC = () => {
                           setNewFolderName('');
                         }
                       }}
-                      className="w-32 h-8 text-sm bg-input border-vault-outline focus:border-vault-outline-active"
+                      className="w-32 h-8 text-sm bg-input border-vault-outline"
                       autoFocus
                     />
                     <Button
