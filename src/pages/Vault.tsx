@@ -699,21 +699,48 @@ const Vault: React.FC = () => {
           </Button>
         </div>
 
-        {/* Search */}
+        {/* Search and Action Buttons */}
         <div className="mb-6 vault-slide-up">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              placeholder="Search entries..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 bg-input border-vault-outline"
-            />
+          <div className="flex items-center gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                placeholder="Search entries..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 bg-input border-vault-outline"
+              />
+            </div>
+            
+            {/* Edit/Trash buttons - beside search with separation */}
+            <div className="flex gap-1">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  const folder = sortedFolders.find(f => f.id === selectedFolder);
+                  if (folder) openRenameDialog(folder);
+                }}
+                disabled={!selectedFolder}
+                className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-50"
+              >
+                <Edit3 className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => selectedFolder && openDeleteDialog(selectedFolder)}
+                disabled={!selectedFolder}
+                className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-muted disabled:opacity-50"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
 
-        {/* Folder Action Buttons - positioned inside folder section */}
-        <div className="mb-6 vault-slide-up relative">
+        {/* Folders Row */}
+        <div className="mb-6 vault-slide-up">
           <div className="flex items-center gap-3 overflow-x-auto pb-1 scrollbar-thin">
             {/* All Folder Button */}
             <div
@@ -729,7 +756,7 @@ const Vault: React.FC = () => {
             </div>
             
             {/* Folder Items */}
-            <div className="flex items-center space-x-3 flex-1">
+            <div className="flex items-center space-x-3">
               <SortableContext items={sortedFolders.map(f => f.id)} strategy={horizontalListSortingStrategy}>
                 {sortedFolders.map((folder) => (
                   <div key={folder.id} className="group transition-all duration-200 ease-out">
@@ -791,31 +818,6 @@ const Vault: React.FC = () => {
                 </Button>
               )}
             </div>
-          </div>
-          
-          {/* Edit/Trash buttons - fixed position on right side */}
-          <div className="absolute right-0 top-0 flex flex-col gap-1">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => {
-                const folder = sortedFolders.find(f => f.id === selectedFolder);
-                if (folder) openRenameDialog(folder);
-              }}
-              disabled={!selectedFolder}
-              className="h-5 w-5 text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-50"
-            >
-              <Edit3 className="h-3 w-3" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => selectedFolder && openDeleteDialog(selectedFolder)}
-              disabled={!selectedFolder}
-              className="h-5 w-5 text-muted-foreground hover:text-destructive hover:bg-muted disabled:opacity-50"
-            >
-              <Trash2 className="h-3 w-3" />
-            </Button>
           </div>
         </div>
 

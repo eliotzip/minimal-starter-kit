@@ -301,34 +301,9 @@ const Login: React.FC = () => {
                           key={key}
                           type="button"
                           variant="vault"
-                          className="aspect-square font-mono text-lg h-12 w-12 sm:h-14 sm:w-14 sm:text-xl transition-all duration-500"
+                          className="aspect-square font-mono text-lg h-12 w-12 sm:h-14 sm:w-14 sm:text-xl"
                           disabled={isLoading}
-                          onClick={(e) => {
-                            // Handle button animation for both mouse and touch
-                            const button = e.currentTarget;
-                            const originalBorder = button.style.border;
-                            
-                            // Apply white outline animation
-                            button.style.border = '2px solid white';
-                            button.style.backgroundColor = 'transparent';
-                            
-                            // Clear animation after 0.1s for both mouse and touch
-                            const timeoutId = setTimeout(() => {
-                              button.style.border = originalBorder;
-                              button.style.backgroundColor = '';
-                            }, 100);
-                            
-                            // Handle touch events to prevent stuck states
-                            const clearStyles = () => {
-                              clearTimeout(timeoutId);
-                              button.style.border = originalBorder;
-                              button.style.backgroundColor = '';
-                            };
-                            
-                            // Add listeners for touch events
-                            button.addEventListener('touchend', clearStyles, { once: true });
-                            button.addEventListener('touchcancel', clearStyles, { once: true });
-                            
+                          onClick={() => {
                             if (key === 'C') {
                               setPin('');
                             } else if (key === '←') {
