@@ -372,9 +372,9 @@ const Vault: React.FC = () => {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8, // Increased for better mobile touch handling
-        delay: 100, // Add slight delay for mobile touch
-        tolerance: 5, // Add tolerance for touch precision
+        distance: 5, // Balanced for both desktop and mobile
+        delay: 0, // No delay for desktop responsiveness
+        tolerance: 3, // Small tolerance for touch accuracy
       },
     }),
     useSensor(KeyboardSensor, {
