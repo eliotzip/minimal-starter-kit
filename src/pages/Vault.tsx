@@ -104,13 +104,6 @@ const SortableEntry: React.FC<SortableEntryProps> = ({
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3 flex-1 min-w-0">
-                <div 
-                  className="cursor-grab active:cursor-grabbing p-1 -ml-1"
-                  {...attributes} 
-                  {...listeners}
-                >
-                  <DragHandle className="text-muted-foreground" />
-                </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 mb-2">
                     <div className="flex-shrink-0">
@@ -365,16 +358,9 @@ const SortableFolder: React.FC<{
           : 'border-border hover:border-vault-outline-hover'
       }`}
       onClick={onSelect}
+      {...attributes} 
+      {...listeners}
     >
-      <div
-        {...attributes}
-        {...listeners}
-        className="cursor-grab active:cursor-grabbing touch-none select-none p-1 -m-1"
-        style={{ touchAction: 'none' }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <GripVertical className="h-3 w-3 text-muted-foreground" />
-      </div>
       <Folder className={`h-4 w-4 ${isSelected ? 'text-vault-outline-active' : 'text-muted-foreground'}`} />
       <span className={`text-sm ${isSelected ? 'text-vault-outline-active' : 'text-foreground'}`}>{folder.name}</span>
       <DropdownMenu>
@@ -754,14 +740,38 @@ const Vault: React.FC = () => {
 
         {/* Search */}
         <div className="mb-6 vault-slide-up">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              placeholder="Search entries..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 bg-input border-vault-outline focus:border-vault-outline-active"
-            />
+          <div className="flex items-center gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                placeholder="Search entries..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 bg-input border-vault-outline focus:border-vault-outline-active"
+              />
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="px-3"
+                >
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-popover border-border" align="end">
+                <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">
+                  Enable Drag Mode
+                </DropdownMenuItem>
+                <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">
+                  Select Multiple
+                </DropdownMenuItem>
+                <DropdownMenuItem className="text-destructive hover:bg-destructive hover:text-destructive-foreground cursor-pointer">
+                  Bulk Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 
@@ -777,14 +787,17 @@ const Vault: React.FC = () => {
           <div className="mb-6 vault-slide-up">
             <div className="flex items-center gap-3 mb-4 overflow-x-auto pb-1 scrollbar-thin">
               {/* All Folder Button */}
-              <Button
-                variant={selectedFolder === null ? "vault-primary" : "vault"}
-                className="flex-col h-auto p-3 min-w-[80px] flex-shrink-0"
+              <div
+                className={`flex items-center space-x-2 px-4 py-2 bg-vault-folder rounded-lg border transition-all duration-200 cursor-pointer ${
+                  selectedFolder === null 
+                    ? 'border-vault-outline-active bg-vault-item-hover' 
+                    : 'border-border hover:border-vault-outline-hover hover:shadow-sm'
+                }`}
                 onClick={() => setSelectedFolder(null)}
               >
-                <Folder className={`w-6 h-6 mb-1 ${selectedFolder === null ? 'text-vault-outline-active' : ''}`} />
-                <span className="text-xs">All</span>
-              </Button>
+                <Folder className={`h-4 w-4 ${selectedFolder === null ? 'text-vault-outline-active' : 'text-muted-foreground'}`} />
+                <span className={`text-sm ${selectedFolder === null ? 'text-vault-outline-active' : 'text-foreground'}`}>All</span>
+              </div>
               
               {/* Folder Items */}
               <div className="flex items-center space-x-3">
