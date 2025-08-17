@@ -892,32 +892,9 @@ const Vault: React.FC = () => {
             )}
           </div>
 
-          {/* Simplified DragOverlay - no animation effects */}
+          {/* DragOverlay removed to hide overlay during dragging */}
           <DragOverlay>
-            {activeId ? (
-              <div>
-                {/* Render folder or entry being dragged */}
-                {sortedFolders.find(f => f.id === activeId) ? (
-                  <Button variant="vault-primary" className="flex-col h-auto p-3 min-w-[80px] shadow-vault-hover">
-                    <Folder className="w-6 h-6 mb-1" />
-                    <span className="text-xs truncate max-w-full">
-                      {sortedFolders.find(f => f.id === activeId)?.name}
-                    </span>
-                  </Button>
-                ) : (
-                  <Card className="border-vault-outline-active shadow-vault-hover bg-background">
-                    <CardContent className="p-4">
-                      <div className="flex items-center gap-3">
-                        <User className="w-4 h-4 text-muted-foreground" />
-                        <h3 className="font-medium truncate">
-                          {filteredEntries.find(e => e.id === activeId)?.title || 'Entry'}
-                        </h3>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-              </div>
-            ) : null}
+            {null}
           </DragOverlay>
         </DndContext>
 
