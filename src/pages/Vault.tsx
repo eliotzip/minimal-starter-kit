@@ -834,7 +834,7 @@ const Vault: React.FC = () => {
           </div>
 
           {/* Add Entry Button */}
-          <div className="mb-6 text-center vault-slide-up mt-6">
+          <div className="mb-6 text-center vault-slide-up">
             <Button
               variant="vault-primary"
               size="lg"
