@@ -86,7 +86,7 @@ const Login: React.FC = () => {
 
   const handlePinInput = (value: string) => {
     // Only allow numbers and limit length
-    const numericValue = value.replace(/\D/g, '').slice(0, 8);
+    const numericValue = value.replace(/\D/g, '').slice(0, 12);
     setPin(numericValue);
   };
 
@@ -290,7 +290,7 @@ const Login: React.FC = () => {
                       className="text-center text-lg font-mono tracking-wider bg-input border-vault-outline focus:ring-1 focus:ring-white focus:border-vault-outline"
                       autoFocus
                       disabled={isLoading}
-                      maxLength={8}
+                      maxLength={12}
                     />
                   </div>
 
@@ -304,21 +304,21 @@ const Login: React.FC = () => {
                           className="aspect-square font-mono text-lg h-12 w-12 sm:h-14 sm:w-14 sm:text-xl transition-all duration-500"
                           disabled={isLoading}
                           onClick={(e) => {
-                            // Add active state that reverts after 0.5s
+                            // Add active state that reverts after 0.15s
                             const button = e.currentTarget;
-                            button.style.backgroundColor = 'hsl(var(--foreground))';
-                            button.style.color = 'hsl(var(--background))';
+                            button.style.border = '2px solid white';
+                            button.style.backgroundColor = '';
+                            button.style.color = '';
                             
                             setTimeout(() => {
-                              button.style.backgroundColor = '';
-                              button.style.color = '';
-                            }, 500);
+                              button.style.border = '';
+                            }, 150);
                             
                             if (key === 'C') {
                               setPin('');
                             } else if (key === '←') {
                               setPin(pin.slice(0, -1));
-                            } else if (typeof key === 'number' && pin.length < 8) {
+                            } else if (typeof key === 'number' && pin.length < 12) {
                               setPin(pin + key.toString());
                             }
                           }}

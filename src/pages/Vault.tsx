@@ -712,6 +712,31 @@ const Vault: React.FC = () => {
           </div>
         </div>
 
+        {/* Folder Action Buttons - appear when a folder is selected */}
+        {selectedFolder && (
+          <div className="flex items-center justify-center gap-1 mb-4 animate-fade-in">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                const folder = sortedFolders.find(f => f.id === selectedFolder);
+                if (folder) openRenameDialog(folder);
+              }}
+              className="h-6 w-6 text-muted-foreground hover:text-foreground hover:bg-muted"
+            >
+              <Edit3 className="h-3 w-3" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => openDeleteDialog(selectedFolder)}
+              className="h-6 w-6 text-muted-foreground hover:text-destructive hover:bg-muted"
+            >
+              <Trash2 className="h-3 w-3" />
+            </Button>
+          </div>
+        )}
+
         {/* Single DndContext for both folders and entries */}
         <DndContext
           sensors={sensors}
@@ -800,31 +825,6 @@ const Vault: React.FC = () => {
                 )}
               </div>
             </div>
-            
-            {/* Folder Action Buttons - appear when a folder is selected */}
-            {selectedFolder && (
-              <div className="flex items-center justify-end gap-2 mt-2 animate-fade-in">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => {
-                    const folder = sortedFolders.find(f => f.id === selectedFolder);
-                    if (folder) openRenameDialog(folder);
-                  }}
-                  className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted"
-                >
-                  <Edit3 className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => openDeleteDialog(selectedFolder)}
-                  className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-muted"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
-            )}
           </div>
 
           {/* Add Entry Button */}
