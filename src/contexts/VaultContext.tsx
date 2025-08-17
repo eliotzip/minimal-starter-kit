@@ -147,7 +147,16 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, [data, saveVaultData]);
 
   const deleteFolder = useCallback(async (id: string): Promise<boolean> => {
-    if (!data) return false;
+    console.log("VaultContext deleteFolder called with id:", id);
+    if (!data) {
+      console.log("No data available");
+      return false;
+    }
+
+    console.log("Current data before deletion:", { 
+      folderCount: data.folders.length, 
+      entryCount: data.entries.length 
+    });
 
     const newData = {
       ...data,
@@ -157,7 +166,16 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       ),
     };
 
-    return saveVaultData(newData);
+    console.log("New data after deletion:", { 
+      folderCount: newData.folders.length, 
+      entryCount: newData.entries.length 
+    });
+
+    console.log("Calling saveVaultData");
+    const result = await saveVaultData(newData);
+    console.log("saveVaultData completed with result:", result);
+    
+    return result;
   }, [data, saveVaultData]);
 
   const reorderEntries = useCallback(async (entries: VaultEntry[]): Promise<boolean> => {

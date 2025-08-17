@@ -611,22 +611,44 @@ const Vault: React.FC = () => {
   };
 
   const handleConfirmDeleteFolder = async () => {
+    console.log("handleConfirmDeleteFolder started", { folderToDelete, selectedFolder });
+    
     if (folderToDelete) {
-      // Reset folder selection and close dialog immediately to prevent freezing
-      if (selectedFolder === folderToDelete) {
-        setSelectedFolder(null);
-      }
+      console.log("About to delete folder", folderToDelete);
+      
+      // Store the folder ID before clearing state
+      const folderIdToDelete = folderToDelete;
+      
+      // Reset all related state immediately
       setDeleteDialogOpen(false);
-      const tempFolderToDelete = folderToDelete;
       setFolderToDelete(null);
       
-      const success = await deleteFolder(tempFolderToDelete);
-      toast({
-        title: success ? "Folder Deleted" : "Error",
-        description: success ? "Folder deleted successfully" : "Failed to delete folder",
-        variant: success ? "default" : "destructive",
-      });
+      // Reset folder selection if needed
+      if (selectedFolder === folderIdToDelete) {
+        console.log("Resetting selected folder");
+        setSelectedFolder(null);
+      }
+      
+      console.log("About to call deleteFolder");
+      try {
+        const success = await deleteFolder(folderIdToDelete);
+        console.log("deleteFolder completed", { success });
+        
+        toast({
+          title: success ? "Folder Deleted" : "Error",
+          description: success ? "Folder deleted successfully" : "Failed to delete folder",
+          variant: success ? "default" : "destructive",
+        });
+      } catch (error) {
+        console.error("Error in deleteFolder", error);
+        toast({
+          title: "Error",
+          description: "Failed to delete folder",
+          variant: "destructive",
+        });
+      }
     }
+    console.log("handleConfirmDeleteFolder completed");
   };
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -782,7 +804,10 @@ const Vault: React.FC = () => {
                       onChange={(e) => setNewFolderName(e.target.value)}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') handleAddFolder();
-                        if (e.key === 'Escape') setShowAddFolder(false);
+                        if (e.key === 'Escape') {
+                          setShowAddFolder(false);
+                          setNewFolderName('');
+                        }
                       }}
                       className="w-32 h-8 text-sm"
                       autoFocus
@@ -794,6 +819,16 @@ const Vault: React.FC = () => {
                       disabled={!newFolderName.trim()}
                     >
                       Add
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => {
+                        setShowAddFolder(false);
+                        setNewFolderName('');
+                      }}
+                    >
+                      Cancel
                     </Button>
                   </div>
                 ) : (
