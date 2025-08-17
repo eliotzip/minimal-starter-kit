@@ -331,7 +331,7 @@ const SortableFolder: React.FC<{
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex items-center justify-center space-x-2 px-3 py-2 bg-vault-folder rounded-lg border transition-all duration-200 cursor-pointer ${
+      className={`flex items-center justify-between px-3 py-2 bg-vault-folder rounded-lg border transition-all duration-200 cursor-pointer ${
         isDragging ? 'opacity-70' : 'hover:shadow-sm'
       } ${
         isSelected 
@@ -342,8 +342,10 @@ const SortableFolder: React.FC<{
       {...attributes} 
       {...listeners}
     >
-      <Folder className={`h-4 w-4 ${isSelected ? 'text-vault-outline-active' : 'text-muted-foreground'}`} />
-      <span className={`text-sm ${isSelected ? 'text-vault-outline-active' : 'text-foreground'}`}>{folder.name}</span>
+      <div className="flex items-center gap-2">
+        <Folder className={`h-4 w-4 ${isSelected ? 'text-vault-outline-active' : 'text-muted-foreground'}`} />
+        <span className={`text-sm ${isSelected ? 'text-vault-outline-active' : 'text-foreground'}`}>{folder.name}</span>
+      </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
