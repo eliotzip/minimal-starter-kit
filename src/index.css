@@ -55,6 +55,12 @@ All colors MUST be HSL.
     --shadow-vault: 0 4px 20px rgba(255, 255, 255, 0.05);
     --shadow-vault-hover: 0 8px 40px rgba(255, 255, 255, 0.1);
 
+    /* Vault specific colors */
+    --vault-item: 0 0% 5%;
+    --vault-item-hover: 0 0% 10%;
+    --folder-bg: 0 0% 12%;
+    --vault-folder: 0 0% 12%; /* Used for bg-vault-folder */
+
     --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;

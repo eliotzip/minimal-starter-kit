@@ -22,8 +22,10 @@ import {
   EyeOff,
   Shield,
   MoreVertical,
+  MoreHorizontal,
   GripVertical
 } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import DragHandle from '@/components/ui/drag-handle';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -330,16 +332,13 @@ const FolderDropZone: React.FC<FolderDropZoneProps> = ({
   );
 };
 
-const SortableFolder: React.FC<SortableFolderProps & { isOver: boolean }> = ({
-  folder,
-  isSelected,
-  entryCount,
-  onClick,
-  onEdit,
-  onDelete,
-  isOver,
-}) => {
-  const isMobile = useIsMobile();
+const SortableFolder: React.FC<{ 
+  folder: VaultFolder;
+  isSelected: boolean;
+  onSelect: () => void;
+  onRename: (folder: VaultFolder) => void;
+  onDelete: (id: string) => void;
+}> = ({ folder, isSelected, onSelect, onRename, onDelete }) => {
   const {
     attributes,
     listeners,
@@ -347,46 +346,69 @@ const SortableFolder: React.FC<SortableFolderProps & { isOver: boolean }> = ({
     transform,
     transition,
     isDragging,
-  } = useSortable({ 
-    id: folder.id,
-    disabled: false,
-  });
+  } = useSortable({ id: folder.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition: isDragging ? 'none' : 'transform 0.2s ease',
-    zIndex: isDragging ? 1000 : 1,
-    opacity: isDragging ? 0.8 : 1,
-  };
-
-  const handleClick = (e: React.MouseEvent) => {
-    if (!isDragging) {
-      onClick();
-    }
+    transition,
   };
 
   return (
-    <div ref={setNodeRef} style={style} className="min-w-[80px]">
-      <div className="relative w-full h-full">
-        <div 
-          className="absolute top-1 left-1 z-10 cursor-grab active:cursor-grabbing p-1 bg-background/80 rounded"
-          {...attributes} 
-          {...listeners}
-        >
-          <DragHandle className="text-muted-foreground" />
-        </div>
-        <div className="w-full h-full">
-          <FolderDropZone
-            folder={folder}
-            isSelected={isSelected}
-            entryCount={entryCount}
-            onClick={handleClick}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            isOver={isOver}
-          />
-        </div>
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`flex items-center space-x-2 px-4 py-2 bg-vault-folder rounded-lg border transition-all duration-200 cursor-pointer ${
+        isDragging ? 'opacity-50 scale-105 shadow-lg z-50' : 'hover:shadow-sm'
+      } ${
+        isSelected 
+          ? 'border-vault-outline-active bg-vault-item-hover' 
+          : 'border-border hover:border-vault-outline-hover'
+      }`}
+      onClick={onSelect}
+    >
+      <div
+        {...attributes}
+        {...listeners}
+        className="cursor-grab active:cursor-grabbing touch-none select-none p-1 -m-1"
+        style={{ touchAction: 'none' }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <GripVertical className="h-3 w-3 text-muted-foreground" />
       </div>
+      <Folder className={`h-4 w-4 ${isSelected ? 'text-vault-outline-active' : 'text-muted-foreground'}`} />
+      <span className={`text-sm ${isSelected ? 'text-vault-outline-active' : 'text-foreground'}`}>{folder.name}</span>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <MoreHorizontal className="h-3 w-3" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="bg-popover border-border" align="end">
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              onRename(folder);
+            }}
+            className="text-foreground hover:bg-accent cursor-pointer"
+          >
+            Rename Folder
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(folder.id);
+            }}
+            className="text-destructive hover:bg-destructive hover:text-destructive-foreground cursor-pointer"
+          >
+            Delete Folder
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 };
@@ -412,6 +434,9 @@ const Vault: React.FC = () => {
   const [renameFolderDialogOpen, setRenameFolderDialogOpen] = useState(false);
   const [folderToRename, setFolderToRename] = useState<VaultFolder | null>(null);
   const [renameFolderName, setRenameFolderName] = useState('');
+
+  // Add missing states
+  const [showAddFolder, setShowAddFolder] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -488,6 +513,66 @@ const Vault: React.FC = () => {
     setVisiblePasswords(newVisible);
   };
 
+  const handleRenameFolder = (folder: VaultFolder) => {
+    setFolderToRename(folder);
+    setRenameFolderName(folder.name);
+    setRenameFolderDialogOpen(true);
+  };
+
+  const handleAddFolder = async () => {
+    if (newFolderName.trim()) {
+      // Check for duplicate names
+      const trimmedName = newFolderName.trim();
+      const existingFolder = data?.folders.find(f => f.name.toLowerCase() === trimmedName.toLowerCase());
+      
+      if (existingFolder) {
+        toast({
+          title: "Duplicate Name",
+          description: "A folder with this name already exists. Please choose a different name.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      const success = await createFolder(trimmedName);
+      toast({
+        title: success ? "Folder Created" : "Error",
+        description: success ? "New folder created" : "Failed to create folder",
+        variant: success ? "default" : "destructive",
+      });
+      
+      if (success) {
+        setShowAddFolder(false);
+        setNewFolderName('');
+      }
+    }
+  };
+
+  const openRenameDialog = (folder: VaultFolder) => {
+    handleRenameFolder(folder);
+  };
+
+  const openDeleteDialog = (id: string) => {
+    handleDeleteFolder(id);
+  };
+
+  const handleFolderDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+    
+    if (!over || active.id === over.id) return;
+
+    // Handle folder reordering
+    if (data?.folders.find(f => f.id === active.id)) {
+      const activeIndex = sortedFolders.findIndex(f => f.id === active.id);
+      const newIndex = sortedFolders.findIndex(f => f.id === over.id);
+      
+      if (activeIndex !== newIndex && newIndex !== -1) {
+        const newFolders = arrayMove(sortedFolders, activeIndex, newIndex);
+        reorderFolders(newFolders);
+      }
+    }
+  };
+
   const handleCreateFolder = () => {
     setNewFolderName('');
     setCreateFolderDialogOpen(true);
@@ -525,12 +610,6 @@ const Vault: React.FC = () => {
   const handleDeleteFolder = (id: string) => {
     setFolderToDelete(id);
     setDeleteDialogOpen(true);
-  };
-
-  const handleRenameFolder = (folder: VaultFolder) => {
-    setFolderToRename(folder);
-    setRenameFolderName(folder.name);
-    setRenameFolderDialogOpen(true);
   };
 
   const handleConfirmRenameFolder = async () => {
@@ -694,9 +773,10 @@ const Vault: React.FC = () => {
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
         >
-          {/* Folders */}
-          <div className="mb-6 vault-slide-up" style={{ marginTop: '1px' }}>
-            <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-1 scrollbar-thin">
+          {/* Folders Row */}
+          <div className="mb-6 vault-slide-up">
+            <div className="flex items-center gap-3 mb-4 overflow-x-auto pb-1 scrollbar-thin">
+              {/* All Folder Button */}
               <Button
                 variant={selectedFolder === null ? "vault-primary" : "vault"}
                 className="flex-col h-auto p-3 min-w-[80px] flex-shrink-0"
@@ -705,35 +785,57 @@ const Vault: React.FC = () => {
                 <Folder className={`w-6 h-6 mb-1 ${selectedFolder === null ? 'text-vault-outline-active' : ''}`} />
                 <span className="text-xs">All</span>
               </Button>
-
-              <SortableContext
-                items={sortedFolders.map(f => f.id)}
-                strategy={horizontalListSortingStrategy}
-              >
-                {sortedFolders.map((folder) => (
-                  <SortableFolder
-                    key={folder.id}
-                    folder={folder}
-                    isSelected={selectedFolder === folder.id}
-                    entryCount={getFolderEntryCount(folder.id)}
-                    onClick={() => setSelectedFolder(
-                      selectedFolder === folder.id ? null : folder.id
-                    )}
-                     onEdit={(folder) => setFolderMenuOpen(folder.id)}
-                     onDelete={handleDeleteFolder}
-                    isOver={overId === `folder-drop-${folder.id}`}
-                  />
-                ))}
-              </SortableContext>
-
-              <Button
-                variant="vault"
-                className="flex-col h-auto p-3 min-w-[80px] flex-shrink-0"
-                onClick={handleCreateFolder}
-              >
-                <FolderPlus className="w-6 h-6 mb-1" />
-                <span className="text-xs">New</span>
-              </Button>
+              
+              {/* Folder Items */}
+              <div className="flex items-center space-x-3">
+                <SortableContext items={sortedFolders.map(f => f.id)} strategy={horizontalListSortingStrategy}>
+                  {sortedFolders.map((folder) => (
+                    <div key={folder.id} className="group">
+                      <SortableFolder
+                        folder={folder}
+                        isSelected={selectedFolder === folder.id}
+                        onSelect={() => setSelectedFolder(selectedFolder === folder.id ? null : folder.id)}
+                        onRename={openRenameDialog}
+                        onDelete={openDeleteDialog}
+                      />
+                    </div>
+                  ))}
+                </SortableContext>
+                
+                {/* Add Folder Section */}
+                {showAddFolder ? (
+                  <div className="flex items-center space-x-2">
+                    <Input
+                      placeholder="Folder name"
+                      value={newFolderName}
+                      onChange={(e) => setNewFolderName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') handleAddFolder();
+                        if (e.key === 'Escape') setShowAddFolder(false);
+                      }}
+                      className="w-32 h-8 text-sm"
+                      autoFocus
+                    />
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={handleAddFolder}
+                      disabled={!newFolderName.trim()}
+                    >
+                      Add
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowAddFolder(true)}
+                    className="flex items-center space-x-1"
+                  >
+                    <FolderPlus className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
 

@@ -57,7 +57,11 @@ export default {
 					'outline-hover': 'hsl(var(--vault-outline-hover))',
 					'outline-active': 'hsl(var(--vault-outline-active))',
 					success: 'hsl(var(--vault-success))',
-					warning: 'hsl(var(--vault-warning))'
+					warning: 'hsl(var(--vault-warning))',
+					item: 'hsl(var(--vault-item))',
+					'item-hover': 'hsl(var(--vault-item-hover))',
+					folder: 'hsl(var(--vault-folder))',
+					'folder-bg': 'hsl(var(--folder-bg))'
 				}
 			},
 			borderRadius: {
