@@ -304,13 +304,15 @@ const Login: React.FC = () => {
                           className="aspect-square font-mono text-lg h-12 w-12 sm:h-14 sm:w-14 sm:text-xl transition-all duration-500"
                           disabled={isLoading}
                           onClick={(e) => {
-                            // Add white outline that reverts after 0.1s
+                            // Add active state that reverts after 0.15s
                             const button = e.currentTarget;
                             button.style.border = '2px solid white';
+                            button.style.backgroundColor = '';
+                            button.style.color = '';
                             
                             setTimeout(() => {
                               button.style.border = '';
-                            }, 100);
+                            }, 150);
                             
                             if (key === 'C') {
                               setPin('');
