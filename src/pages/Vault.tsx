@@ -739,88 +739,6 @@ const Vault: React.FC = () => {
           </div>
         </div>
 
-        {/* Folders Row */}
-        <div className="mb-6 vault-slide-up">
-          <div className="flex items-center gap-3 overflow-x-auto pb-1 scrollbar-thin">
-            {/* All Folder Button */}
-            <div
-              className={`flex items-center justify-center space-x-2 px-3 py-2 bg-vault-folder rounded-lg border transition-all duration-200 cursor-pointer ${
-                selectedFolder === null 
-                  ? 'border-vault-outline-active bg-vault-item-hover' 
-                  : 'border-border hover:border-vault-outline-hover hover:shadow-sm'
-              }`}
-              onClick={() => setSelectedFolder(null)}
-            >
-              <Folder className={`h-4 w-4 ${selectedFolder === null ? 'text-vault-outline-active' : 'text-muted-foreground'}`} />
-              <span className={`text-sm ${selectedFolder === null ? 'text-vault-outline-active' : 'text-foreground'}`}>All</span>
-            </div>
-            
-            {/* Folder Items */}
-            <div className="flex items-center space-x-3">
-              <SortableContext items={sortedFolders.map(f => f.id)} strategy={horizontalListSortingStrategy}>
-                {sortedFolders.map((folder) => (
-                  <div key={folder.id} className="group transition-all duration-200 ease-out">
-                    <SortableFolder
-                      folder={folder}
-                      isSelected={selectedFolder === folder.id}
-                      onSelect={() => setSelectedFolder(selectedFolder === folder.id ? null : folder.id)}
-                      onRename={openRenameDialog}
-                      onDelete={openDeleteDialog}
-                    />
-                  </div>
-                ))}
-              </SortableContext>
-              
-              {/* Add Folder Section */}
-              {showAddFolder ? (
-                <div className="flex items-center space-x-2">
-                  <Input
-                    placeholder="Folder name"
-                    value={newFolderName}
-                    onChange={(e) => setNewFolderName(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') handleAddFolder();
-                      if (e.key === 'Escape') {
-                        setShowAddFolder(false);
-                        setNewFolderName('');
-                      }
-                    }}
-                    className="w-32 h-8 text-sm bg-input border-vault-outline"
-                    autoFocus
-                  />
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={handleAddFolder}
-                    disabled={!newFolderName.trim()}
-                  >
-                    Add
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => {
-                      setShowAddFolder(false);
-                      setNewFolderName('');
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              ) : (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowAddFolder(true)}
-                  className="flex items-center space-x-1"
-                >
-                  <FolderPlus className="h-4 w-4" />
-                </Button>
-              )}
-            </div>
-          </div>
-        </div>
-
         {/* Single DndContext for both folders and entries */}
         <DndContext
           sensors={sensors}
@@ -829,6 +747,87 @@ const Vault: React.FC = () => {
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
         >
+          {/* Folders Row */}
+          <div className="mb-6 vault-slide-up">
+            <div className="flex items-center gap-3 overflow-x-auto pb-1 scrollbar-thin">
+              {/* All Folder Button */}
+              <div
+                className={`flex items-center justify-center space-x-2 px-3 py-2 bg-vault-folder rounded-lg border transition-all duration-200 cursor-pointer ${
+                  selectedFolder === null 
+                    ? 'border-vault-outline-active bg-vault-item-hover' 
+                    : 'border-border hover:border-vault-outline-hover hover:shadow-sm'
+                }`}
+                onClick={() => setSelectedFolder(null)}
+              >
+                <Folder className={`h-4 w-4 ${selectedFolder === null ? 'text-vault-outline-active' : 'text-muted-foreground'}`} />
+                <span className={`text-sm ${selectedFolder === null ? 'text-vault-outline-active' : 'text-foreground'}`}>All</span>
+              </div>
+              
+              {/* Folder Items */}
+              <div className="flex items-center space-x-3">
+                <SortableContext items={sortedFolders.map(f => f.id)} strategy={horizontalListSortingStrategy}>
+                  {sortedFolders.map((folder) => (
+                    <div key={folder.id} className="group transition-all duration-200 ease-out">
+                      <SortableFolder
+                        folder={folder}
+                        isSelected={selectedFolder === folder.id}
+                        onSelect={() => setSelectedFolder(selectedFolder === folder.id ? null : folder.id)}
+                        onRename={openRenameDialog}
+                        onDelete={openDeleteDialog}
+                      />
+                    </div>
+                  ))}
+                </SortableContext>
+                
+                {/* Add Folder Section */}
+                {showAddFolder ? (
+                  <div className="flex items-center space-x-2">
+                    <Input
+                      placeholder="Folder name"
+                      value={newFolderName}
+                      onChange={(e) => setNewFolderName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') handleAddFolder();
+                        if (e.key === 'Escape') {
+                          setShowAddFolder(false);
+                          setNewFolderName('');
+                        }
+                      }}
+                      className="w-32 h-8 text-sm bg-input border-vault-outline"
+                      autoFocus
+                    />
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={handleAddFolder}
+                      disabled={!newFolderName.trim()}
+                    >
+                      Add
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => {
+                        setShowAddFolder(false);
+                        setNewFolderName('');
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowAddFolder(true)}
+                    className="flex items-center space-x-1"
+                  >
+                    <FolderPlus className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
           {/* Folders Row - now handled above */}
 
           {/* Add Entry Button */}
