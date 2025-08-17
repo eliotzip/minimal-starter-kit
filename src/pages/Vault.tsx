@@ -316,19 +316,28 @@ const SortableFolder: React.FC<{
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex items-center justify-center space-x-2 px-3 py-2 bg-vault-folder rounded-lg border transition-all duration-200 ease-out cursor-pointer ${
-        isDragging ? 'border-white' : 'hover:shadow-sm'
+      className={`flex items-center justify-center space-x-2 px-3 py-2 bg-vault-folder rounded-lg border transition-all duration-200 ease-out relative ${
+        isDragging ? 'border-white cursor-grabbing' : 'hover:shadow-sm'
       } ${
         isSelected 
           ? 'border-vault-outline-active bg-vault-item-hover' 
           : 'border-border hover:border-vault-outline-hover'
       }`}
-      onClick={onSelect}
-      {...attributes} 
-      {...listeners}
     >
-      <Folder className={`h-4 w-4 ${isSelected ? 'text-vault-outline-active' : 'text-muted-foreground'}`} />
-      <span className={`text-sm ${isSelected ? 'text-vault-outline-active' : 'text-foreground'}`}>{folder.name}</span>
+      {/* Drag handle - invisible but covers the entire folder */}
+      <div
+        className="absolute inset-0 cursor-grab active:cursor-grabbing"
+        {...attributes}
+        {...listeners}
+      />
+      {/* Clickable content area */}
+      <div 
+        className="relative z-10 flex items-center space-x-2 cursor-pointer"
+        onClick={onSelect}
+      >
+        <Folder className={`h-4 w-4 ${isSelected ? 'text-vault-outline-active' : 'text-muted-foreground'}`} />
+        <span className={`text-sm ${isSelected ? 'text-vault-outline-active' : 'text-foreground'}`}>{folder.name}</span>
+      </div>
     </div>
   );
 };
