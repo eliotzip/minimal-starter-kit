@@ -97,24 +97,27 @@ const SortableEntry: React.FC<SortableEntryProps> = ({
 
   return (
     <>
-      <div ref={setNodeRef} style={style}>
-        <Card className={`border-vault-outline hover:border-vault-outline-hover transition-vault-smooth hover:shadow-vault group ${
-          isDragging ? 'shadow-vault-hover border-vault-outline-active' : ''
+      <div 
+        ref={setNodeRef} 
+        style={style}
+        {...attributes}
+        {...listeners}
+      >
+        <Card className={`border-vault-outline hover:border-vault-outline-hover transition-vault-smooth hover:shadow-vault group cursor-grab active:cursor-grabbing ${
+          isDragging ? 'opacity-70' : ''
         }`}>
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3 flex-1 min-w-0">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="flex-shrink-0">
-                      <User className="w-4 h-4 text-muted-foreground" />
-                    </div>
                     <h3 className="font-medium truncate">{entry.title}</h3>
                   </div>
                   <div className="space-y-1 text-sm text-muted-foreground">
-                    <p className="truncate">
-                      <span className="font-mono">{entry.username}</span>
-                    </p>
+                    <div className="flex items-center gap-2 truncate">
+                      <User className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                      <span className="font-mono truncate">{entry.username}</span>
+                    </div>
                     {entry.website && (
                       <p className="truncate">{entry.website}</p>
                     )}
@@ -129,17 +132,6 @@ const SortableEntry: React.FC<SortableEntryProps> = ({
                   className="h-8 w-8"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onCopy(entry.username, 'Username');
-                  }}
-                >
-                  <User className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8"
-                  onClick={(e) => {
-                    e.stopPropagation();
                     onTogglePassword(entry.id);
                   }}
                 >
@@ -148,17 +140,6 @@ const SortableEntry: React.FC<SortableEntryProps> = ({
                   ) : (
                     <Eye className="w-4 h-4" />
                   )}
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onCopy(entry.password, 'Password');
-                  }}
-                >
-                  <Copy className="w-4 h-4" />
                 </Button>
                 <Button
                   variant="ghost"
@@ -366,12 +347,12 @@ const SortableFolder: React.FC<{
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            variant="outline"
+            variant="ghost"
             size="sm"
-            className="h-6 w-6 p-0 transition-opacity"
+            className="h-5 w-5 p-0 transition-opacity hover:bg-transparent"
             onClick={(e) => e.stopPropagation()}
           >
-            <MoreVertical className="h-3 w-3" />
+            <MoreVertical className="h-2.5 w-2.5" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="bg-popover border-border" align="end">
