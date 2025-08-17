@@ -697,39 +697,6 @@ const Vault: React.FC = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10 bg-input border-vault-outline focus:border-vault-outline-active"
             />
-            {/* Folder Actions Icon - only show when a folder is selected */}
-            {selectedFolder && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 h-6 w-6 text-muted-foreground hover:text-foreground"
-                  >
-                    <FileText className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-popover border-border" align="end">
-                  <DropdownMenuItem
-                    onClick={() => {
-                      const folder = sortedFolders.find(f => f.id === selectedFolder);
-                      if (folder) openRenameDialog(folder);
-                    }}
-                    className="text-foreground hover:bg-accent cursor-pointer"
-                  >
-                    <Edit3 className="h-4 w-4 mr-2" />
-                    Rename Folder
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => openDeleteDialog(selectedFolder)}
-                    className="text-destructive hover:bg-destructive hover:text-destructive-foreground cursor-pointer"
-                  >
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Delete Folder
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
           </div>
         </div>
 
@@ -821,6 +788,31 @@ const Vault: React.FC = () => {
                 )}
               </div>
             </div>
+            
+            {/* Folder Action Buttons - appear when a folder is selected */}
+            {selectedFolder && (
+              <div className="flex items-center justify-end gap-2 mt-2 animate-fade-in">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    const folder = sortedFolders.find(f => f.id === selectedFolder);
+                    if (folder) openRenameDialog(folder);
+                  }}
+                  className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted"
+                >
+                  <Edit3 className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => openDeleteDialog(selectedFolder)}
+                  className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-muted"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Add Entry Button */}
