@@ -301,9 +301,19 @@ const Login: React.FC = () => {
                           key={key}
                           type="button"
                           variant="vault"
-                          className="aspect-square font-mono text-lg h-12 w-12 sm:h-14 sm:w-14 sm:text-xl"
+                          className="aspect-square font-mono text-lg h-12 w-12 sm:h-14 sm:w-14 sm:text-xl transition-all duration-500"
                           disabled={isLoading}
-                          onClick={() => {
+                          onClick={(e) => {
+                            // Add active state that reverts after 0.5s
+                            const button = e.currentTarget;
+                            button.style.backgroundColor = 'hsl(var(--foreground))';
+                            button.style.color = 'hsl(var(--background))';
+                            
+                            setTimeout(() => {
+                              button.style.backgroundColor = '';
+                              button.style.color = '';
+                            }, 500);
+                            
                             if (key === 'C') {
                               setPin('');
                             } else if (key === '←') {
