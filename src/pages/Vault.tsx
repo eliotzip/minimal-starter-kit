@@ -316,28 +316,19 @@ const SortableFolder: React.FC<{
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex items-center justify-center space-x-2 px-3 py-2 bg-vault-folder rounded-lg border transition-all duration-200 ease-out relative ${
-        isDragging ? 'border-white cursor-grabbing' : 'hover:shadow-sm'
+      className={`flex items-center justify-center space-x-2 px-3 py-2 bg-vault-folder rounded-lg border transition-all duration-200 ease-out cursor-pointer ${
+        isDragging ? 'border-white' : 'hover:shadow-sm'
       } ${
         isSelected 
           ? 'border-vault-outline-active bg-vault-item-hover' 
           : 'border-border hover:border-vault-outline-hover'
       }`}
+      onClick={onSelect}
+      {...attributes} 
+      {...listeners}
     >
-      {/* Drag handle - invisible but covers the entire folder */}
-      <div
-        className="absolute inset-0 cursor-grab active:cursor-grabbing"
-        {...attributes}
-        {...listeners}
-      />
-      {/* Clickable content area */}
-      <div 
-        className="relative z-10 flex items-center space-x-2 cursor-pointer"
-        onClick={onSelect}
-      >
-        <Folder className={`h-4 w-4 ${isSelected ? 'text-vault-outline-active' : 'text-muted-foreground'}`} />
-        <span className={`text-sm ${isSelected ? 'text-vault-outline-active' : 'text-foreground'}`}>{folder.name}</span>
-      </div>
+      <Folder className={`h-4 w-4 ${isSelected ? 'text-vault-outline-active' : 'text-muted-foreground'}`} />
+      <span className={`text-sm ${isSelected ? 'text-vault-outline-active' : 'text-foreground'}`}>{folder.name}</span>
     </div>
   );
 };
@@ -381,9 +372,7 @@ const Vault: React.FC = () => {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 5, // Balanced for both desktop and mobile
-        delay: 0, // No delay for desktop responsiveness
-        tolerance: 3, // Small tolerance for touch accuracy
+        distance: 3, // Reduced distance for better responsiveness
       },
     }),
     useSensor(KeyboardSensor, {
@@ -712,7 +701,7 @@ const Vault: React.FC = () => {
 
         {/* Search and Action Buttons */}
         <div className="mb-6 vault-slide-up">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
@@ -723,7 +712,7 @@ const Vault: React.FC = () => {
               />
             </div>
             
-            {/* Edit/Trash buttons - closer to search */}
+            {/* Edit/Trash buttons - beside search with separation */}
             <div className="flex gap-1">
               <Button
                 variant="ghost"
