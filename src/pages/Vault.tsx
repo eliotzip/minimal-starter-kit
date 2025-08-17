@@ -372,7 +372,9 @@ const Vault: React.FC = () => {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 3, // Reduced distance for better responsiveness
+        distance: 8, // Increased for better mobile touch handling
+        delay: 100, // Add slight delay for mobile touch
+        tolerance: 5, // Add tolerance for touch precision
       },
     }),
     useSensor(KeyboardSensor, {
@@ -701,7 +703,7 @@ const Vault: React.FC = () => {
 
         {/* Search and Action Buttons */}
         <div className="mb-6 vault-slide-up">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
@@ -712,7 +714,7 @@ const Vault: React.FC = () => {
               />
             </div>
             
-            {/* Edit/Trash buttons - beside search with separation */}
+            {/* Edit/Trash buttons - closer to search */}
             <div className="flex gap-1">
               <Button
                 variant="ghost"
