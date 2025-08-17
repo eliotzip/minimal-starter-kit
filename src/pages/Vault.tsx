@@ -611,11 +611,7 @@ const Vault: React.FC = () => {
   };
 
   const handleConfirmDeleteFolder = async () => {
-    console.log("handleConfirmDeleteFolder started", { folderToDelete, selectedFolder });
-    
     if (folderToDelete) {
-      console.log("About to delete folder", folderToDelete);
-      
       // Store the folder ID before clearing state
       const folderIdToDelete = folderToDelete;
       
@@ -625,14 +621,11 @@ const Vault: React.FC = () => {
       
       // Reset folder selection if needed
       if (selectedFolder === folderIdToDelete) {
-        console.log("Resetting selected folder");
         setSelectedFolder(null);
       }
       
-      console.log("About to call deleteFolder");
       try {
         const success = await deleteFolder(folderIdToDelete);
-        console.log("deleteFolder completed", { success });
         
         toast({
           title: success ? "Folder Deleted" : "Error",
@@ -648,7 +641,6 @@ const Vault: React.FC = () => {
         });
       }
     }
-    console.log("handleConfirmDeleteFolder completed");
   };
 
   const handleDragStart = (event: DragStartEvent) => {

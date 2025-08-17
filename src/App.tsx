@@ -16,35 +16,39 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   return isUnlocked ? <>{children}</> : <Navigate to="/" replace />;
 };
 
+const AppRoutes = () => (
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route 
+        path="/vault" 
+        element={
+          <ProtectedRoute>
+            <Vault />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/add-entry" 
+        element={
+          <ProtectedRoute>
+            <AddEntry />
+          </ProtectedRoute>
+        } 
+      />
+      {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  </BrowserRouter>
+);
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
       <VaultProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Login />} />
-            <Route 
-              path="/vault" 
-              element={
-                <ProtectedRoute>
-                  <Vault />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/add-entry" 
-              element={
-                <ProtectedRoute>
-                  <AddEntry />
-                </ProtectedRoute>
-              } 
-            />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+        <AppRoutes />
       </VaultProvider>
     </TooltipProvider>
   </QueryClientProvider>
