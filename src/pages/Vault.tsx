@@ -351,7 +351,7 @@ const SortableFolder: React.FC<{
       ref={setNodeRef}
       style={style}
       className={`flex items-center space-x-2 px-4 py-2 bg-vault-folder rounded-lg border transition-all duration-200 cursor-pointer ${
-        isDragging ? 'opacity-50 scale-105 shadow-lg z-50' : 'hover:shadow-sm'
+        isDragging ? 'opacity-70' : 'hover:shadow-sm'
       } ${
         isSelected 
           ? 'border-vault-outline-active bg-vault-item-hover' 
@@ -368,10 +368,10 @@ const SortableFolder: React.FC<{
           <Button
             variant="outline"
             size="sm"
-            className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+            className="h-6 w-6 p-0 transition-opacity"
             onClick={(e) => e.stopPropagation()}
           >
-            <MoreHorizontal className="h-3 w-3" />
+            <MoreVertical className="h-3 w-3" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="bg-popover border-border" align="end">
