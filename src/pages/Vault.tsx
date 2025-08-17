@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -52,6 +52,7 @@ import {
   SortableContext as SortableContextType,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { useSearchParams } from 'react-router-dom';
 
 interface SortableEntryProps {
   entry: VaultEntry;
@@ -337,6 +338,7 @@ const Vault: React.FC = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const [searchParams, setSearchParams] = useSearchParams();
   
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
@@ -356,6 +358,16 @@ const Vault: React.FC = () => {
 
   // Add missing states
   const [showAddFolder, setShowAddFolder] = useState(false);
+
+  // Handle URL parameter for selected folder
+  useEffect(() => {
+    const selectedFolderParam = searchParams.get('selectedFolder');
+    if (selectedFolderParam) {
+      setSelectedFolder(selectedFolderParam);
+      // Clean up the URL parameter
+      setSearchParams(new URLSearchParams());
+    }
+  }, [searchParams, setSearchParams]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -845,7 +857,7 @@ const Vault: React.FC = () => {
                 {!searchTerm && (
                   <Button
                     variant="vault"
-                    onClick={() => navigate('/add-entry')}
+                    onClick={() => navigate(`/add-entry${selectedFolder ? `?folder=${selectedFolder}` : ''}`)}
                   >
                     <Plus className="w-4 h-4" />
                     Add Entry

@@ -88,7 +88,7 @@ const AddEntry: React.FC = () => {
           title: isEditing ? "Entry Updated" : "Entry Saved",
           description: `${formData.title} has been ${isEditing ? 'updated' : 'saved'} successfully.`,
         });
-        navigate('/vault');
+        navigate(preSelectedFolder ? `/vault?selectedFolder=${preSelectedFolder}` : '/vault');
       } else {
         toast({
           title: "Error",
@@ -133,7 +133,7 @@ const AddEntry: React.FC = () => {
           title: isEditing ? "Entry Updated" : "Entry Saved",
           description: `${formData.title} has been ${isEditing ? 'updated' : 'saved'} without a password.`,
         });
-        navigate('/vault');
+        navigate(preSelectedFolder ? `/vault?selectedFolder=${preSelectedFolder}` : '/vault');
       }
     } catch (error) {
       toast({
@@ -166,7 +166,7 @@ const AddEntry: React.FC = () => {
       <div className="max-w-md mx-auto">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6 vault-fade-in">
-          <Button variant="vault" size="icon" onClick={() => navigate('/vault')}>
+          <Button variant="vault" size="icon" onClick={() => navigate(preSelectedFolder ? `/vault?selectedFolder=${preSelectedFolder}` : '/vault')}>
             <ArrowLeft className="w-4 h-4" />
           </Button>
           <h1 className="text-xl font-bold">
@@ -285,7 +285,7 @@ const AddEntry: React.FC = () => {
                   type="button"
                   variant="vault"
                   className="flex-1"
-                  onClick={() => navigate('/vault')}
+                  onClick={() => navigate(preSelectedFolder ? `/vault?selectedFolder=${preSelectedFolder}` : '/vault')}
                   disabled={isLoading}
                 >
                   Cancel
