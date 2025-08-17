@@ -422,7 +422,7 @@ const Vault: React.FC = () => {
   };
 
   const handleEditEntry = (entry: VaultEntry) => {
-    navigate(`/add-entry?edit=${entry.id}`);
+    navigate(`/add-entry?edit=${entry.id}${selectedFolder ? `&folder=${selectedFolder}` : ''}`);
   };
 
   const handleDeleteEntry = async (id: string) => {
@@ -766,7 +766,7 @@ const Vault: React.FC = () => {
                           setNewFolderName('');
                         }
                       }}
-                      className="w-32 h-8 text-sm"
+                      className="w-32 h-8 text-sm bg-input border-vault-outline focus:border-vault-outline-active"
                       autoFocus
                     />
                     <Button
