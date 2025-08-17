@@ -21,11 +21,9 @@ import {
   Eye,
   EyeOff,
   Shield,
-  MoreVertical,
-  MoreHorizontal,
+  FileText,
   GripVertical
 } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import DragHandle from '@/components/ui/drag-handle';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -286,20 +284,6 @@ const FolderDropZone: React.FC<FolderDropZoneProps> = ({
           )}
         </div>
         <span className="text-xs truncate max-w-full font-medium">{folder.name}</span>
-        
-        <div className={`absolute top-1 right-1 ${isMobile ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`}>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-6 w-6 text-muted-foreground hover:text-foreground bg-background/80 hover:bg-background rounded-full"
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit(folder);
-            }}
-          >
-            <MoreVertical className="w-3 h-3" />
-          </Button>
-        </div>
       </Button>
     </div>
   );
@@ -343,38 +327,6 @@ const SortableFolder: React.FC<{
     >
       <Folder className={`h-4 w-4 ${isSelected ? 'text-vault-outline-active' : 'text-muted-foreground'}`} />
       <span className={`text-sm ${isSelected ? 'text-vault-outline-active' : 'text-foreground'}`}>{folder.name}</span>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-5 w-5 p-0 transition-opacity hover:bg-transparent"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <MoreVertical className="h-2.5 w-2.5" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="bg-popover border-border" align="end">
-          <DropdownMenuItem
-            onClick={(e) => {
-              e.stopPropagation();
-              onRename(folder);
-            }}
-            className="text-foreground hover:bg-accent cursor-pointer"
-          >
-            Rename Folder
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(folder.id);
-            }}
-            className="text-destructive hover:bg-destructive hover:text-destructive-foreground cursor-pointer"
-          >
-            Delete Folder
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
     </div>
   );
 };
@@ -835,6 +787,43 @@ const Vault: React.FC = () => {
                 )}
               </div>
             </div>
+            
+            {/* Folder Actions Menu - appears when a folder is selected */}
+            {selectedFolder && (
+              <div className="mt-3 p-3 bg-vault-folder border border-vault-outline-active rounded-lg transition-all duration-200 ease-in-out animate-fade-in">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-vault-outline-active" />
+                    <span className="text-sm font-medium text-vault-outline-active">
+                      {sortedFolders.find(f => f.id === selectedFolder)?.name} Actions
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const folder = sortedFolders.find(f => f.id === selectedFolder);
+                        if (folder) openRenameDialog(folder);
+                      }}
+                      className="h-8 px-3 text-xs border-vault-outline hover:border-vault-outline-active hover:bg-vault-item-hover"
+                    >
+                      <Edit3 className="h-3 w-3 mr-1" />
+                      Rename
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => openDeleteDialog(selectedFolder)}
+                      className="h-8 px-3 text-xs border-destructive/50 text-destructive hover:border-destructive hover:bg-destructive hover:text-destructive-foreground"
+                    >
+                      <Trash2 className="h-3 w-3 mr-1" />
+                      Delete
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Add Entry Button */}
