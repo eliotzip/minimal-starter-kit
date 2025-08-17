@@ -24,6 +24,7 @@ import {
   FileText,
   GripVertical
 } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import DragHandle from '@/components/ui/drag-handle';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -696,6 +697,39 @@ const Vault: React.FC = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10 bg-input border-vault-outline focus:border-vault-outline-active"
             />
+            {/* Folder Actions Icon - only show when a folder is selected */}
+            {selectedFolder && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 h-6 w-6 text-muted-foreground hover:text-foreground"
+                  >
+                    <FileText className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="bg-popover border-border" align="end">
+                  <DropdownMenuItem
+                    onClick={() => {
+                      const folder = sortedFolders.find(f => f.id === selectedFolder);
+                      if (folder) openRenameDialog(folder);
+                    }}
+                    className="text-foreground hover:bg-accent cursor-pointer"
+                  >
+                    <Edit3 className="h-4 w-4 mr-2" />
+                    Rename Folder
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => openDeleteDialog(selectedFolder)}
+                    className="text-destructive hover:bg-destructive hover:text-destructive-foreground cursor-pointer"
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete Folder
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
         </div>
 
@@ -787,43 +821,6 @@ const Vault: React.FC = () => {
                 )}
               </div>
             </div>
-            
-            {/* Folder Actions Menu - appears when a folder is selected */}
-            {selectedFolder && (
-              <div className="mt-3 p-3 bg-vault-folder border border-vault-outline-active rounded-lg transition-all duration-200 ease-in-out animate-fade-in">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <FileText className="h-4 w-4 text-vault-outline-active" />
-                    <span className="text-sm font-medium text-vault-outline-active">
-                      {sortedFolders.find(f => f.id === selectedFolder)?.name} Actions
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        const folder = sortedFolders.find(f => f.id === selectedFolder);
-                        if (folder) openRenameDialog(folder);
-                      }}
-                      className="h-8 px-3 text-xs border-vault-outline hover:border-vault-outline-active hover:bg-vault-item-hover"
-                    >
-                      <Edit3 className="h-3 w-3 mr-1" />
-                      Rename
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => openDeleteDialog(selectedFolder)}
-                      className="h-8 px-3 text-xs border-destructive/50 text-destructive hover:border-destructive hover:bg-destructive hover:text-destructive-foreground"
-                    >
-                      <Trash2 className="h-3 w-3 mr-1" />
-                      Delete
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Add Entry Button */}
