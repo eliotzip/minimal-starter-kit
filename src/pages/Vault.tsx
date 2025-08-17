@@ -84,10 +84,9 @@ const SortableEntry: React.FC<SortableEntryProps> = ({
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
+    transition: transition || 'transform 200ms ease',
     opacity: 1,
     zIndex: isDragging ? 50 : 1,
-    scale: isDragging ? '1.02' : '1',
   };
 
   const handleDelete = () => {
@@ -104,7 +103,7 @@ const SortableEntry: React.FC<SortableEntryProps> = ({
         {...listeners}
       >
         <Card className={`border-vault-outline hover:border-vault-outline-hover transition-vault-smooth hover:shadow-vault group cursor-grab active:cursor-grabbing ${
-          isDragging ? 'border-white border-2' : ''
+          isDragging ? 'border-white' : ''
         }`}>
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
@@ -324,7 +323,7 @@ const SortableFolder: React.FC<{
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
+    transition: transition || 'transform 200ms ease',
   };
 
   return (
@@ -332,7 +331,7 @@ const SortableFolder: React.FC<{
       ref={setNodeRef}
       style={style}
       className={`flex items-center justify-center space-x-2 px-3 py-2 bg-vault-folder rounded-lg border transition-all duration-200 cursor-pointer ${
-        isDragging ? 'border-white border-2' : 'hover:shadow-sm'
+        isDragging ? 'border-white' : 'hover:shadow-sm'
       } ${
         isSelected 
           ? 'border-vault-outline-active bg-vault-item-hover' 
